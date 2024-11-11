@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Query Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question-block {
+            margin-bottom: 30px;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .query {
+            font-family: "Courier New", Courier, monospace;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Query Results</h1>
+
+    {% for result in results %}
+    <div class="question-block">
+        <div class="question">{{ result.question }}</div>
+        <div class="query"><pre>{{ result.query }}</pre></div>
+
+        {% if result.output and result.output|length > 0 %}
+            <table>
+                <thead>
+                    <tr>
+                        {% for column in result.output[0].keys() %}
+                            <th>{{ column }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in result.output %}
+                        <tr>
+                            {% for value in row.values() %}
+                                <td>{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No data available for this query.</p>
+        {% endif %}
+    </div>
+{% endfor %}
+
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+        {% if prev_page %}
+        <a href="?page={{ prev_page }}"><button>Previous Page</button></a>
+        {% endif %}
+        {% if next_page %}
+        <a href="?page={{ next_page }}"><button>Next Page</button></a>
+        {% endif %}
+    </div>
+</body>
+</html>
